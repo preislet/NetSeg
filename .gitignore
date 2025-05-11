@@ -1,3 +1,25 @@
+
+# Downloaded
+boundary_labels/
+norm_images/
+raw_annotations/
+raw_images/
+
+
+test.txt
+training.txt
+validation.txt
+segmentation_cp3.cppipe
+readme.txt
+filenames_and_plates.csv
+
+
+
+
+
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
