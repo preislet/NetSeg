@@ -19,6 +19,7 @@ from utils.models.U_net import UNet
 #   if file is utils/models/resunet.py -> use "resunet"
 #   if file is utils/models/ResU_net.py -> keep "ResU_net"
 from utils.models.ResU_net import ResUNet
+from utils.models.AttentionU_net import AttentionUNet
 
 from utils.crossentropy import weighted_crossentropy
 from utils.metrics import channel_precision, channel_recall, categorical_accuracy
@@ -124,6 +125,8 @@ def build_model(name: str, in_ch: int, out_ch: int) -> nn.Module:
         return ResUNet(in_channels=in_ch, out_channels=out_ch)
     elif name in ["unet", "u-net"]:
         return UNet(in_channels=in_ch, out_channels=out_ch)
+    elif name in ["attentionunet", "attention_u_net", "attention-u-net"]:
+        return AttentionUNet(in_channels=in_ch, out_channels=out_ch)
     else:
         raise ValueError(f"Unknown model '{name}'")
 
@@ -237,14 +240,14 @@ def main():
     parser.add_argument("--dev_list",   type=str, default="validation.txt")  # "dev"
     parser.add_argument("--test_list",  type=str, default="test.txt")        # "test"
 
-    parser.add_argument("--model", type=str, default="resunet", choices=["resunet", "unet"])
+    parser.add_argument("--model", type=str, default="resunet", choices=["resunet", "unet", "attentionunet"])
     parser.add_argument("--in_channels", type=int, default=1)
     parser.add_argument("--out_channels", type=int, default=3)
 
     parser.add_argument("--epochs", type=int, default=50)
     parser.add_argument("--batch_size", type=int, default=10)
     parser.add_argument("--lr", type=float, default=1e-4)
-    parser.add_argument("--num_workers", type=int, default=max(1, os.cpu_count() // 2))
+    parser.add_argument("--num_workers", type=int, default=16)
     parser.add_argument("--amp", action="store_true", help="enable mixed precision (CUDA only)")
 
     parser.add_argument("--out_dir", type=str, default="checkpoints")
@@ -305,9 +308,6 @@ def main():
 
         # Evaluate on dev (validation)
         dev_results = evaluate(model, dev_loader, device=device) if dev_loader else None
-        test_results = None
-        #test_results = evaluate(model, test_loader, device=device) if test_loader else None
-
         # Print nicely
         print(f"Train loss: {train_loss:.4f}")
         if dev_results:
@@ -317,12 +317,6 @@ def main():
         else:
             print("Dev metrics: [no dev set]")
 
-        if test_results:
-            print("Test metrics:")
-            print(f"  Acc: {test_results['accuracy']:.4f} | "
-                  f"Macro P/R: {test_results['macro_precision']:.4f} / {test_results['macro_recall']:.4f}")
-        else:
-            print("Test metrics: [no test set]")
 
         # Save latest checkpoint
         tag = datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -343,12 +337,11 @@ def main():
             "epoch": epoch,
             "train_loss": train_loss,
             "dev": dev_results,
-            "test": test_results,
             "checkpoint": latest_ckpt,
             "timestamp": tag,
         }
         metrics_log.append(row)
-        with open(os.path.join(args.out_dir, "metrics.jsonl"), "a", encoding="utf-8") as f:
+        with open(os.path.join(args.out_dir, f"{args.model}_metrics.jsonl"), "a", encoding="utf-8") as f:
             f.write(json.dumps(row) + "\n")
 
     print("\nTraining complete.")

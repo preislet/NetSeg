@@ -12,6 +12,11 @@ validation.txt
 segmentation_cp3.cppipe
 readme.txt
 filenames_and_plates.csv
+*.txt
+*.jsonl
+*.pt
+*.png
+*.tif
 
 
 

@@ -21,12 +21,12 @@ python -m venv venv
 source venv/bin/activate
 
 
-cp $HOMEDIR/download_data.py .
-cp $HOMEDIR/preprocessing.py .
-cp $HOMEDIR/Model_training.py .
-cp $HOMEDIR/test_inference.py .
-cp $HOMEDIR/config.py .
-cp -r $HOMEDIR/utils .
+cp $HOMEDIR/download_data.py $SCRATCHDIR
+cp $HOMEDIR/preprocessing.py $SCRATCHDIR
+cp $HOMEDIR/Model_training.py $SCRATCHDIR
+cp $HOMEDIR/test_inference.py $SCRATCHDIR
+cp $HOMEDIR/config.py $SCRATCHDIR
+cp -r $HOMEDIR/utils $SCRATCHDIR
 
 
 # Instalace potřebných knihoven
@@ -36,7 +36,10 @@ pip install matplotlib numpy tqdm scikit-image requests
 
 python download_data.py 
 python preprocessing.py
-python Model_training.py --threads 16 --epochs 20 --batch_size 10
+echo "Training with U-Net model"
+python Model_training.py --model unet
+echo "Training with ResUNet model"
+python Model_training.py --model resunet
 
 # Kopírování výsledků zpět do HOMEDIR (model, logy, výstupy)
-rsync -av --exclude='venv' --exclude='__pycache__' $SCRATCHDIR/ $HOMEDIR/
+cp -r checkpoints $HOMEDIR/

@@ -48,7 +48,7 @@ config_vars["boundary_size"] = 2
 
 ## Elastic deformation takes a lot of times to compute. 
 ## It is computed only once in the preprocessing. 
-config_vars["augment_images"] =  100
+config_vars["augment_images"] =  False
 
 ## Augmentation parameters. 
 ## Calibrate parameters using the 00-elastic-deformation.ipynb
@@ -70,7 +70,6 @@ config_vars["learning_rate"] = 1e-4
 
 config_vars["epochs"] = 15
 
-config_vars["steps_per_epoch"] = 500
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # 02.02 BATCHES
