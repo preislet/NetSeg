@@ -10,7 +10,7 @@ config_vars = {}
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # 01.01 INPUT DIRECTORIES AND FILES
 
-config_vars["root_directory"] = "C:\\Users\\Tomas\Desktop\\Quantitative_Microscopy_project\\"
+config_vars["root_directory"] = "."
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # 01.02 DATA PARTITION INFO
@@ -24,8 +24,8 @@ config_vars["create_split_files"] = False
 
 ## Randomly choose training and validation images.
 ## The remaining fraction is reserved for test images.
-config_vars["training_fraction"] = 0.5
-config_vars["validation_fraction"] = 0.25
+config_vars["training_fraction"] = 0.70
+config_vars["validation_fraction"] = 0.10
 
 # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # 01.03 IMAGE STORAGE OPTIONS
@@ -48,7 +48,7 @@ config_vars["boundary_size"] = 2
 
 ## Elastic deformation takes a lot of times to compute. 
 ## It is computed only once in the preprocessing. 
-config_vars["augment_images"] =  False
+config_vars["augment_images"] =  100
 
 ## Augmentation parameters. 
 ## Calibrate parameters using the 00-elastic-deformation.ipynb
